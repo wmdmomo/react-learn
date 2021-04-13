@@ -15,6 +15,14 @@ const Chils: FC<NameProp> = (props) => {
         {
             type: 'apple',
             name: '苹果'
+        },
+        {
+            type: 'banana',
+            name: '香蕉'
+        },
+        {
+            type: 'grape',
+            name: '葡萄'
         }
     ]
     const handleChange = (mess: any) => {
