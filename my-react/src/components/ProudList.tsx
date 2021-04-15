@@ -8,7 +8,11 @@ const ProductList: FC<{
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'name'
+      dataIndex: 'name',
+      //   render: (text: string) => <a>{text}</a>
+      render: (text: string) => {
+        return <a>{text}</a>
+      }
     },
     {
       title: 'Id',
