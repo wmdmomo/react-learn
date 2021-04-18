@@ -55,3 +55,41 @@ const columns = [
     }
 ]
 ```
+##### routes
+``routes``
+里面 ``path`` 不以``/``开始的话 就是从它的父亲的路径后面继续往后加
+如果是以``/``开始的话 就是从这个路径开始的意思
+在 ``config``下面建``routes.ts``在``.umirc.ts``进行配置的
+相对路径是从 ``src/pages``页面进行引进的
+绝对路径 可以使用``@``来代替``src``
+
+##### ProLayout使用的方法
+读取的是 ``props`` 中的 ``route`` ``location`` 两个属性 是umi默认注入的
+是在 ``.umirc.ts``进行配置的
+``` ts
+把配置的路由名字进行引入 可以显示菜单的名字了
+这是因为 在routes里面设置的时候他是一个[{}]数组对象
+route={[...routes][0]}
+
+对每个路由进行设置 当被点击的时候 就跳转到对应的 路由组件
+并且设置当前的选中的pathname 为点中的path
+          menuItemRender={(item, dom) => {
+            if (item.isUrl || item.children || !item.path) return dom
+            else {
+              return (
+                <Link
+                  to={item.path}
+                  onClick={() => {
+                    if (item.path) {
+                      setPathname(item.path)
+                    }
+                  }}
+                >
+                  {dom}
+                </Link>
+              )
+            }
+          }}
+```
+##### ProTable
+
