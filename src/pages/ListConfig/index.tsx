@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import ProTable, { ProColumns } from '@ant-design/pro-table'
-import { EllipsisOutlined } from '@ant-design/icons'
+import { PageHeaderWrapper } from '@ant-design/pro-layout'
+import { Link } from 'umi'
 type TableListItem = {
   key: number
   name: string
@@ -17,51 +18,51 @@ for (let i = 0; i < creators.length; i++) {
     creator: creators[i]
   })
 }
-
 const columns: ProColumns<TableListItem>[] = [
   {
     title: '应用名称',
     dataIndex: 'name',
+    hideInSearch: true,
     render: (_) => <a>{_}</a>
   },
   {
     title: '容量名称',
     dataIndex: 'containers',
-    align: 'right',
+    hideInSearch: true,
     sorter: (a, b) => a.containers - b.containers
   },
   {
     title: '创建者',
-    dataIndex: 'creator'
+    dataIndex: 'creator',
+    hideInSearch: true
   },
   {
     title: '操作',
-    key: 'option',
-    valueType: 'option',
-    width: 120,
-    render: () => [
-      <a key="link">链路</a>,
-      <a key="warn">报警</a>,
-      <a key="more">
-        <EllipsisOutlined />
-      </a>
-    ]
+    width: '110px',
+    hideInSearch: true,
+    render: (_, record) => (
+      <Link to={`/label/label-info1/detail?code=${record.name}`}>查看详情</Link>
+    )
   }
 ]
 const ListConfig: FC = () => {
   return (
     <>
-      <ProTable<TableListItem>
-        columns={columns}
-        request={(params, sorter, filter) => {
-          // 表单搜索项会从 params 传入，传递给后端接口。
-          console.log(params, sorter, filter)
-          return Promise.resolve({
-            data: TableSource,
-            success: true
-          })
-        }}
-      ></ProTable>
+      <PageHeaderWrapper title={false}>
+        <ProTable<TableListItem>
+          search={false}
+          toolBarRender={false}
+          columns={columns}
+          request={(params) => {
+            // 表单搜索项会从 params 传入，传递给后端接口。
+            // console.log(params, sorter, filter)
+            return Promise.resolve({
+              data: TableSource,
+              success: true
+            })
+          }}
+        ></ProTable>
+      </PageHeaderWrapper>
     </>
   )
 }
