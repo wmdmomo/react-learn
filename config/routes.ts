@@ -34,6 +34,14 @@ const routes = [
             component: './ListConfig'
           },
           {
+            path: '/admin/sub-page2/info',
+            name: '详情页',
+            // icon: CrownOutlined,
+            component: './Detail',
+            hideInMenu: true
+          },
+
+          {
             path: '/admin/sub-page3',
             name: '三级页面',
             // icon: CrownOutlined,

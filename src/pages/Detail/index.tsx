@@ -3,7 +3,7 @@ import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table'
 import { Modal, message, Divider, Button } from 'antd'
 import React, { FC, useRef, useState } from 'react'
 import style from './style.less'
-import { PlusOutlined } from '@ant-design/icons'
+import { CloudFilled, PlusOutlined } from '@ant-design/icons'
 import { DetailItem } from './data'
 import OperationModal from './components/OperationModal'
 const { confirm } = Modal
@@ -26,6 +26,22 @@ const Detail: FC = () => {
     setVisible(false)
     setCurrent(undefined)
   }
+  const hanleSub = (type: string, newRow: DetailItem, id?: number) => {
+    setVisible(false)
+    setCurrent(undefined)
+    if (type === 'add') {
+      newRow.key = Math.max(...data.map((item) => item.key)) + 1
+      setData([...data, newRow])
+    }
+    if (type === 'edit' && id) {
+      data[id - 1] = newRow
+      setData([...data])
+    }
+    // 让这个table 在重新拿到一遍数据
+    if (actionRef.current) {
+      actionRef.current.reload()
+    }
+  }
   // const hideModal = (item: DetailItem, flag: boolean) => {
   //   setVisible(false)
   //   const index = item.key
@@ -39,16 +55,24 @@ const Detail: FC = () => {
   //     }
   //   }
   // }
-  const deleteConfirm = (item: DetailItem) => {
-    console.log('delete: ', item)
+  const deleteConfirm = (item: DetailItem, index: number) => {
+    const tmp = data.slice()
+    // 这个删除不对 因为前面的key删掉了
+    tmp.splice(index, 1)
+    console.log(tmp)
+    setData([...tmp])
+    if (actionRef.current) {
+      console.log(actionRef)
+      actionRef.current.reload()
+    }
   }
-  const onDelete = (item: DetailItem) => {
+  const onDelete = (item: DetailItem, index: number) => {
     confirm({
       title: '提示',
       centered: true,
       content: <div>您确定删除该记录吗？</div>,
       onOk() {
-        deleteConfirm(item)
+        deleteConfirm(item, index)
       },
       maskClosable: true
     })
@@ -86,10 +110,10 @@ const Detail: FC = () => {
       title: '操作',
       width: 100,
       hideInSearch: true,
-      render: (_, record) => {
+      render: (_, record, index) => {
         return (
           <div className={style.detailItem}>
-            <a onClick={(e) => onDelete(record)}>删除</a>
+            <a onClick={(e) => onDelete(record, index)}>删除</a>
             <a onClick={() => showModal(record)}>编辑</a>
           </div>
         )
@@ -106,11 +130,20 @@ const Detail: FC = () => {
           request={() => Promise.resolve({ data: data, success: true })}
         ></ProTable>
       </PageHeaderWrapper>
-      {/* <OperationModal
+
+      <OperationModal
         visible={visible}
         current={current}
         onCancel={handleCancel}
-      ></OperationModal> */}
+        onOK={hanleSub}
+      ></OperationModal>
+
+      {/* <OperationModal
+          visible={visible}
+          current={current}
+          onCancel={handleCancel}
+          onOK={hanleSub}
+        ></OperationModal> */}
       {/* {current && (
         <Modal
           title="Modal"

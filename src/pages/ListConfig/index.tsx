@@ -41,7 +41,7 @@ const columns: ProColumns<TableListItem>[] = [
     width: '110px',
     hideInSearch: true,
     render: (_, record) => (
-      <Link to={`/label/label-info1/detail?code=${record.name}`}>查看详情</Link>
+      <Link to={`/admin/sub-page2/info?code=${record.name}`}>查看详情</Link>
     )
   }
 ]

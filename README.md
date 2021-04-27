@@ -125,3 +125,27 @@ PageHeaderWrapper如何去掉 title，只保留面包屑
 修改的时候只能修改某几个字段 其它字段默认带上 不能修改
 ####
 
+1. antd Modal的使用``error``
+devScripts.js:6523 Warning: Instance created by `useForm` is not connected to any Form element. Forget to pass `form` prop?
+问题产生原因：
+使用ant design在Modal中使用Form表单，并且通过Form.useForm() 但出现如上警告，这是因为Modal组件会在Form表单之前创建，因此当页面初始化时form对象会找不到可关联的Form表单，于是出现上述警告
+可以在Modal 上面加上一句 ``getContainer={false}``
+2. Math.max(...data.map((item) => item.key))
+那个一个数组对象中某个属性的最大值
+3. 这里要注意的点
+Modal 里面嵌套了 Form 对于Form 表单要设置一个初始值 
+本来设置了 Input 里面的 ``defaultvalue``
+警告说受控组件 要用``initialValues``
+但是这样的话 就会 Modal 只加载一次 然后form 那个表单的内容一直都是初始化的值 不会更新
+所以 解决方案是
+- 但其实 Modal 自身里面已经有 ``visible``属性了
+```JS
+{visible && <OperationModal/>}
+```
+- 另外一种解决方法 ``initialValues``不设置
+用以下的形式 在useEffect里面进行设置
+```JS
+form.setFieldsValue({
+  user: current.name
+})
+```
